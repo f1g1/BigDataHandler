@@ -1,12 +1,12 @@
 ﻿
-namespace BigDataHandler.Models
+namespace BigDataHandler.Dtos
 {
-    public record DataStamp
+    public record DtoDataStamp
     {
         public int Id { get; set; }
         public long Timestamp { get; set; }
         public string Type { get; set; }
-        public string Values { get; set; }
+        public object Values { get; set; }
         public string Source { get; set; }
     }
 }

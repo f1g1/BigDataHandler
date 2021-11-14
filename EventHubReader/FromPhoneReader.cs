@@ -1,36 +1,41 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
+﻿using AutoMapper;
 using Azure.Messaging.EventHubs;
-using Azure.Messaging.EventHubs.Consumer;
 using Azure.Messaging.EventHubs.Processor;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
-using System.Diagnostics;
-using System.Collections.Concurrent;
+using Azure.Storage.Blobs;
+using BigDataHandler.Dtos;
+using BigDataHandler.EFConfigs;
 using BigDataHandler.Models;
-using System.Text.Json.Serialization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BigDataHandler.EventHubReader
 {
     public class FromPhoneReader : IHostedService
     {
         private IConfiguration _configuration;
+        private readonly IMapper _mapper;
+        private readonly IServiceProvider _serviceProvider;
         static BlobContainerClient _storageClient;
         static EventProcessorClient _processor;
         private ConcurrentDictionary<string, int> partitionEventCount = new();
+        private readonly string _eventHubName;
 
-        public FromPhoneReader(IConfiguration configuration)
+        public FromPhoneReader(IConfiguration configuration, IServiceProvider serviceProvider, IMapper mapper)
         {
             _configuration = configuration;
-
+            _mapper = mapper;
+            _serviceProvider = serviceProvider;
             var ehubNamespaceConnectionString = _configuration.GetConnectionString("EventHub");
-            var eventHubName = _configuration.GetValue<string>("FromPhoneEH");
+            _eventHubName = _configuration.GetValue<string>("FromPhoneEH");
             var blobStorageConnectionString = _configuration.GetConnectionString("BlobStorage");
             var blobContainerName = _configuration.GetValue<string>("BlobContainerName");
             var consumerGroup = _configuration.GetValue<string>("EHConsumerGroup");
@@ -43,21 +48,17 @@ namespace BigDataHandler.EventHubReader
                _storageClient,
                consumerGroup,
                ehubNamespaceConnectionString,
-               eventHubName);
+               _eventHubName);
         }
 
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
 
-            // Register handlers for processing events and handling errors
             _processor.ProcessEventAsync += ProcessEventHandler;
             _processor.ProcessErrorAsync += ProcessErrorHandler;
 
-            // Start the processing
             await _processor.StartProcessingAsync();
-
-
         }
 
         private Task ProcessErrorHandler(ProcessErrorEventArgs args)
@@ -90,8 +91,20 @@ namespace BigDataHandler.EventHubReader
                 string partition = args.Partition.PartitionId;
                 //var eventBody = (DataStamp(args.Data.EventBody.ToArray());
                 var jsonBody = Encoding.UTF8.GetString(args.Data.EventBody.ToArray());
-                var myPoco = JsonConvert.DeserializeObject<DataStamp>(jsonBody);
-                Debug.WriteLine($"Event from partition { partition } object:{ JsonConvert.SerializeObject(jsonBody)}.");
+                var dataStamp = JsonConvert.DeserializeObject<DtoDataStamp>(jsonBody);
+                dataStamp.Source = _eventHubName;
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext =
+                        scope.ServiceProvider.GetRequiredService<BigDataContext>();
+
+                    var ds = _mapper.Map<DataStamp>(dataStamp);
+                    _bigDataContext.Add(ds);
+                    _bigDataContext.SaveChanges();
+                    Debug.WriteLine($"Event from partition { partition } object:{ JsonConvert.SerializeObject(jsonBody)}.");
+
+                    var currentEntities = _bigDataContext.DataStamps.Where((x) => true).ToList();
+                }
 
                 int eventsSinceLastCheckpoint = partitionEventCount.AddOrUpdate(
                     key: partition,
@@ -106,32 +119,16 @@ namespace BigDataHandler.EventHubReader
             }
             catch
             {
-                // It is very important that you always guard against
-                // exceptions in your handler code; the processor does
-                // not have enough understanding of your code to
-                // determine the correct action to take.  Any
-                // exceptions from your handlers go uncaught by
-                // the processor and will NOT be redirected to
-                // the error handler.
             }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            // Stop the processing
+
+            _processor.ProcessEventAsync -= ProcessEventHandler;
+            _processor.ProcessErrorAsync -= ProcessErrorHandler;
+
             await _processor.StopProcessingAsync();
         }
-
-        //public object ByteArrayToObject(byte[] arrBytes)
-        //{
-        //    using (var memStream = new MemoryStream())
-        //    {
-        //        var binForm = new BinaryFormatter();
-        //        memStream.Write(arrBytes, 0, arrBytes.Length);
-        //        memStream.Seek(0, SeekOrigin.Begin);
-        //        object obj = binForm.Deserialize(memStream);
-        //        return obj;
-        //    }
-        //}
     }
 }
