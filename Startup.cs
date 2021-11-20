@@ -31,8 +31,8 @@ namespace BigDataHandler
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(BigDataProfile));
-            services.AddDbContext<BigDataContext>(options => options.UseInMemoryDatabase(databaseName: "BigDataContext"));
-            
+            services.AddDbContext<BigDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
