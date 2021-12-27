@@ -9,8 +9,12 @@ namespace BigDataHandler.Mapper
     {
         public BigDataProfile()
         {
-            CreateMap<DataStamp, DtoDataStamp>().ForMember(x => x.Values, d => d.MapFrom(y => JsonConvert.DeserializeObject<object>(y.Values)));
-            CreateMap<DtoDataStamp, DataStamp>().ForMember(x => x.Values, d => d.MapFrom(y => JsonConvert.SerializeObject(y.Values)));
+            CreateMap<DataStamp, DtoDataStamp>()
+                .ForMember(x => x.Values, d => d.MapFrom(y => JsonConvert.DeserializeObject<object>(y.Values)))
+                .ForMember(x => x.Location, d => d.MapFrom(y => JsonConvert.DeserializeObject<object>(y.Location)));
+            CreateMap<DtoDataStamp, DataStamp>()
+                .ForMember(x => x.Values, d => d.MapFrom(y => JsonConvert.SerializeObject(y.Values)))
+                .ForMember(x => x.Location, d => d.MapFrom(y => JsonConvert.SerializeObject(y.Location)));
         }
     }
 }

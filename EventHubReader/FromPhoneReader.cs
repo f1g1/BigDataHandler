@@ -51,16 +51,21 @@ namespace BigDataHandler.EventHubReader
                _eventHubName);
         }
 
-
         public async Task StartAsync(CancellationToken cancellationToken)
         {
 
             _processor.ProcessEventAsync += ProcessEventHandler;
             _processor.ProcessErrorAsync += ProcessErrorHandler;
+            try
+            {
+                await _processor.StartProcessingAsync(cancellationToken);
 
-            await _processor.StartProcessingAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
-
         private Task ProcessErrorHandler(ProcessErrorEventArgs args)
         {
             try
@@ -117,8 +122,9 @@ namespace BigDataHandler.EventHubReader
                     partitionEventCount[partition] = 0;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.ToString());
             }
         }
 
