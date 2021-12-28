@@ -10,6 +10,7 @@ namespace BigDataHandler.EFConfigs
         }
 
         public DbSet<DataStamp> DataStamps { get; set; }
+        public DbSet<DataStampsStatisticalFeatures> DataStampsStatisticalFeatures { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +28,23 @@ namespace BigDataHandler.EFConfigs
             modelBuilder.Entity<DataStamp>()
              .HasIndex(p => new { p.Timestamp, p.Type }).IsUnique();
 
+            modelBuilder.Entity<StatisticalFeatures>().HasKey(x => x.Id);
+            modelBuilder.Entity<StatisticalFeatures>().Property(x => x.Id).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<DataStampsStatisticalFeatures>().HasKey(x => x.Id);
+            modelBuilder.Entity<DataStampsStatisticalFeatures>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<DataStampsStatisticalFeatures>()
+                .Property(x => x.StartTimestamp)
+                .IsRequired();
+            modelBuilder.Entity<DataStampsStatisticalFeatures>()
+                .Property(x => x.StopTimestamp)
+                .IsRequired();
+            modelBuilder.Entity<DataStampsStatisticalFeatures>()
+                .Property(x => x.StartLocation)
+                .IsRequired();
+            modelBuilder.Entity<DataStampsStatisticalFeatures>()
+                .Property(x => x.StopLocation)
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }

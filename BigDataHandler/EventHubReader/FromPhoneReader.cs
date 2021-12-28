@@ -104,6 +104,7 @@ namespace BigDataHandler.EventHubReader
                         scope.ServiceProvider.GetRequiredService<BigDataContext>();
 
                     var ds = _mapper.Map<DataStamp>(dataStamp);
+                    ds.IsProcessed = false;
                     _bigDataContext.Add(ds);
                     _bigDataContext.SaveChanges();
                     Debug.WriteLine($"Event from partition { partition } object:{ JsonConvert.SerializeObject(jsonBody)}.");

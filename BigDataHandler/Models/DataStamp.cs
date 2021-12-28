@@ -9,5 +9,6 @@ namespace BigDataHandler.Models
         public string Values { get; set; }
         public string Source { get; set; }
         public string Location { get; set; }
+        public bool IsProcessed { get; set; }
     }
 }
