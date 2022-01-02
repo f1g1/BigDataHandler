@@ -75,12 +75,13 @@ namespace BigDataHandler.FeatureExtraction
                     dataStampsProcessed.Label = dataStampsForProcessing.First().Label;
                     dataStampsProcessed.StartLocation = dataStampsForProcessing.First().Location;
                     dataStampsProcessed.StopLocation = dataStampsForProcessing.Last().Location;
+                    dataStampsProcessed.ActivityStartTimestamp = dataStampsForProcessing.First().ActivityStartTimestamp;
                     dataStampsProcessed.StartTimestamp = dataStampsForProcessing.First().Timestamp;
                     dataStampsProcessed.StopTimestamp = dataStampsForProcessing.Last().Timestamp;
-                    dataStampsProcessed.phoneAccelerometerStatistics = ToEntityStatisticalFeatures(features.phoneAccFeatures);
-                    dataStampsProcessed.phoneGyroscopeStatistics = ToEntityStatisticalFeatures(features.phoneGyroFeatures);
-                    dataStampsProcessed.sensorAccelerometerStatistics = ToEntityStatisticalFeatures(features.sensorAccFeatures);
-                    dataStampsProcessed.sensorGyroscopeStatistics = ToEntityStatisticalFeatures(features.sensorGyroFeature);
+                    dataStampsProcessed.phoneAccelerometerStatistics = features.phoneAccFeatures;
+                    dataStampsProcessed.phoneGyroscopeStatistics = features.phoneGyroFeatures;
+                    dataStampsProcessed.sensorAccelerometerStatistics = features.sensorAccFeatures;
+                    dataStampsProcessed.sensorGyroscopeStatistics = features.sensorGyroFeature;
                     dataStampsProcessed.stepsCount = features.totalSteps;
 
                     if (dataStampsForProcessing.First().Label == null)
@@ -104,25 +105,6 @@ namespace BigDataHandler.FeatureExtraction
                 }
                 startTimestamp += (long)queryInterval.TotalMilliseconds;
             }
-        }
-
-        private Models.CartesianStatisticalFeatures ToEntityStatisticalFeatures(FeatureExtraction.CartesianStatisticalFeatures features)
-        {
-            var entityFeatures = new Models.CartesianStatisticalFeatures();
-            entityFeatures.xAxisFeatures = ToEntityStatisticalFeatures(features.xAxisFeatures);
-            entityFeatures.yAxisFeatures = ToEntityStatisticalFeatures(features.yAxisFeatures);
-            entityFeatures.zAxisFeatures = ToEntityStatisticalFeatures(features.zAxisFeatures);
-            return entityFeatures;
-        }
-
-        private Models.StatisticalFeatures ToEntityStatisticalFeatures(FeatureExtraction.StatisticalFeatures features)
-        {
-            var entityFeatures = new Models.StatisticalFeatures();
-            entityFeatures.Max = features.Max;
-            entityFeatures.Min = features.Min;
-            entityFeatures.Mean = features.Mean;
-            entityFeatures.StandardDeviation = features.StandardDeviation;
-            return entityFeatures;
         }
     }
 }

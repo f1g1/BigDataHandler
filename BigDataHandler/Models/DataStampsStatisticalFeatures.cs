@@ -5,6 +5,7 @@ namespace BigDataHandler.Models
     public record DataStampsStatisticalFeatures
     {
         public int Id { get; set; }
+        public long ActivityStartTimestamp { get; set; }
         public long StartTimestamp { get; set; }
         public long StopTimestamp { get; set; }
         public string StartLocation { get; set; }
