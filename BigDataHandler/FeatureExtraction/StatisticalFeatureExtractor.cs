@@ -26,7 +26,7 @@ namespace BigDataHandler.FeatureExtraction
 
             foreach (DataStamp data in dataStamps)
             {
-                if(data.Source == "from-phone")
+                if(data.Source == "Phone")
                 {
                     switch (data.Type)
                     {

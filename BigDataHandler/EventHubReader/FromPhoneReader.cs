@@ -97,7 +97,6 @@ namespace BigDataHandler.EventHubReader
                 //var eventBody = (DataStamp(args.Data.EventBody.ToArray());
                 var jsonBody = Encoding.UTF8.GetString(args.Data.EventBody.ToArray());
                 var dataStamp = JsonConvert.DeserializeObject<DtoDataStamp>(jsonBody);
-                dataStamp.Source = _eventHubName;
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     BigDataContext _bigDataContext =
