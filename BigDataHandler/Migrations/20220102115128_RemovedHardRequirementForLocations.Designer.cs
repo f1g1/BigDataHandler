@@ -4,14 +4,16 @@ using BigDataHandler.EFConfigs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BigDataHandler.Migrations
 {
     [DbContext(typeof(BigDataContext))]
-    partial class BigDataContextModelSnapshot : ModelSnapshot
+    [Migration("20220102115128_RemovedHardRequirementForLocations")]
+    partial class RemovedHardRequirementForLocations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

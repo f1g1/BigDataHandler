@@ -26,11 +26,11 @@ namespace BigDataHandler.FeatureExtraction
 
             foreach (DataStamp data in dataStamps)
             {
-                if(data.Source == "Phone")
+                if(data.Source == "from-phone")
                 {
                     switch (data.Type)
                     {
-                        case "Accelerometer": ExtractRawValues(data, phoneAccRawValues); break;
+                        case "Accelometer": ExtractRawValues(data, phoneAccRawValues); break;
                         case "Gyroscope": ExtractRawValues(data, phoneGyroRawValues); break;
                         case "Steps": features.totalSteps = ExtractStepsCounter(data); break;
                     }
@@ -39,7 +39,7 @@ namespace BigDataHandler.FeatureExtraction
                 {
                     switch (data.Type)
                     {
-                        case "Accelerometer": ExtractRawValues(data, sensorAccRawValues); break;
+                        case "Accelometer": ExtractRawValues(data, sensorAccRawValues); break;
                         case "Gyroscope": ExtractRawValues(data, sensorGyroRawValues); break;
                     }
                 }

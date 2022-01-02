@@ -1,5 +1,6 @@
 using BigDataHandler.EFConfigs;
 using BigDataHandler.EventHubReader;
+using BigDataHandler.FeatureExtraction;
 using BigDataHandler.Mapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,7 @@ namespace BigDataHandler
             });
 
             services.AddHostedService<FromPhoneReader>();
+            services.AddHostedService<WorkerFeatureExtractor>();
             
         }
 

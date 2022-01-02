@@ -40,12 +40,6 @@ namespace BigDataHandler.EFConfigs
             modelBuilder.Entity<DataStampsStatisticalFeatures>()
                 .Property(x => x.StopTimestamp)
                 .IsRequired();
-            modelBuilder.Entity<DataStampsStatisticalFeatures>()
-                .Property(x => x.StartLocation)
-                .IsRequired();
-            modelBuilder.Entity<DataStampsStatisticalFeatures>()
-                .Property(x => x.StopLocation)
-                .IsRequired();
 
             modelBuilder.Entity<DataStampsStatisticalFeaturesPredicted>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<DataStampsStatisticalFeaturesPredicted>()
@@ -53,12 +47,6 @@ namespace BigDataHandler.EFConfigs
                 .IsRequired();
             modelBuilder.Entity<DataStampsStatisticalFeaturesPredicted>()
                 .Property(x => x.StopTimestamp)
-                .IsRequired();
-            modelBuilder.Entity<DataStampsStatisticalFeaturesPredicted>()
-                .Property(x => x.StartLocation)
-                .IsRequired();
-            modelBuilder.Entity<DataStampsStatisticalFeaturesPredicted>()
-                .Property(x => x.StopLocation)
                 .IsRequired();
 
             base.OnModelCreating(modelBuilder);
