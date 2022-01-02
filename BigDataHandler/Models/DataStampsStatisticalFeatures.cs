@@ -23,15 +23,21 @@ namespace BigDataHandler.Models
 
     }
 
-    public record CartesianStatisticalFeatures
+    public class CartesianStatisticalFeatures
     {
+        public CartesianStatisticalFeatures()
+        {
+            xAxisFeatures = new();
+            yAxisFeatures = new();
+            zAxisFeatures = new();
+        }
         public int Id { get; set; }
         public StatisticalFeatures xAxisFeatures { get; set; }
         public StatisticalFeatures yAxisFeatures { get; set; }
         public StatisticalFeatures zAxisFeatures { get; set; }
     }
 
-    public record StatisticalFeatures
+    public class StatisticalFeatures
     {
         public int Id { get; set; }
         public double Min { get; set; }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using BigDataHandler.FeatureExtraction;
 using BigDataHandler.Models;
 
 namespace BigDataHandler.FeatureExtraction
