@@ -3,6 +3,9 @@ using BigDataHandler.FeatureExtraction;
 using BigDataHandler.Models;
 using System.Collections.Generic;
 using System;
+using AutoMapper;
+using BigDataHandler.Mapper;
+using Newtonsoft.Json;
 
 namespace UnitTests
 {
@@ -97,7 +100,20 @@ namespace UnitTests
 
             var featureExtractor = new StatisticalFeatureExtractor();
             var features = featureExtractor.ExtractStatisticalFeatures(mockedData);
-
+            var f = new DataStampsStatisticalFeatures();
+            f.Id = 1; 
+            f.phoneAccelerometerStatistics = features.phoneAccFeatures;
+            f.sensorAccelerometerStatistics = features.sensorAccFeatures;
+            f.phoneGyroscopeStatistics = features.phoneGyroFeatures;
+            f.sensorGyroscopeStatistics = features.sensorGyroFeature;
+            f.StartLocation = mockedData[0].Location;
+            f.StopLocation = mockedData[^1].Location;
+            f.StartTimestamp = mockedData[0].ActivityStartTimestamp;
+            f.StopTimestamp = mockedData[^1].Timestamp;
+            f.IsProcessed = false;
+            f.Label = "walking";
+            f.stepsCount = 22;
+            var z = JsonConvert.SerializeObject(f);
             // Sensor Accelerometer checks
             {
                 Assert.AreEqual(0.7, features.sensorAccFeatures.xAxisFeatures.Max);
