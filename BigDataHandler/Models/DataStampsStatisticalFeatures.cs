@@ -14,6 +14,13 @@ namespace BigDataHandler.Models
         public CartesianStatisticalFeatures sensorAccelerometerStatistics { get; set; }
         public CartesianStatisticalFeatures sensorGyroscopeStatistics { get; set; }
         public int stepsCount { get; set; }
+        public bool IsProcessed { get; set; }
+        public string Label { get; set; }
+    }
+
+    public record DataStampsStatisticalFeaturesPredicted : DataStampsStatisticalFeatures
+    {
+
     }
 
     public record CartesianStatisticalFeatures
