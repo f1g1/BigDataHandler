@@ -15,6 +15,9 @@ namespace BigDataHandler.Mapper
             CreateMap<DtoDataStamp, DataStamp>()
                 .ForMember(x => x.Values, d => d.MapFrom(y => JsonConvert.SerializeObject(y.Values)))
                 .ForMember(x => x.Location, d => d.MapFrom(y => JsonConvert.SerializeObject(y.Location)));
+
+            CreateMap<CartesianStatisticalFeatures, FeatureExtraction.CartesianStatisticalFeatures>().ReverseMap();
+
         }
     }
 }
