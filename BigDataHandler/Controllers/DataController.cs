@@ -22,6 +22,28 @@ namespace BigDataHandler.Controllers
         }
 
         [HttpGet]
+        [Route("/api/data/trainingData")]
+        public IEnumerable<DataStampsStatisticalFeatures> GetLabeledData()
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var query = _bigDataContext.DataStampsStatisticalFeatures
+                            .Where(d => d.IsProcessed == false && d.Label != null);
+                    var data = IncludeAllEntities(query).ToList();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<DataStampsStatisticalFeatures>();
+        }
+
+        [HttpGet]
         [Route("/api/data/labeledData")]
         public IEnumerable<DataStampsStatisticalFeatures> GetLabeledData(long startTimeStamp, long stopTimeStamp, string label)
         {
