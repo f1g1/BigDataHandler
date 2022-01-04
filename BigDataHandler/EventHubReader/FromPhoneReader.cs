@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -107,8 +106,6 @@ namespace BigDataHandler.EventHubReader
                     _bigDataContext.Add(ds);
                     _bigDataContext.SaveChanges();
                     Debug.WriteLine($"Event from partition { partition } object:{ JsonConvert.SerializeObject(jsonBody)}.");
-
-                    var currentEntities = _bigDataContext.DataStamps.Where((x) => true).ToList();
                 }
 
                 int eventsSinceLastCheckpoint = partitionEventCount.AddOrUpdate(

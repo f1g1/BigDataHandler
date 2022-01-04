@@ -101,7 +101,7 @@ namespace BigDataHandler.FeatureExtraction
             var values = dataStamp.Values;
             values = values.Substring(1, values.Length - 2);
             var stringValues = values.Split(',');
-            return int.Parse(stringValues[0]);
+            return (int)Double.Parse(stringValues[0]);
         }
 
         private double ExtractMin(List<double> values)

@@ -12,10 +12,10 @@ namespace BigDataHandler.FeatureExtraction
 
         public DataStampsFeatures()
         {
-            phoneGyroFeatures = new();
-            phoneAccFeatures = new();
-            sensorGyroFeature = new();
-            sensorAccFeatures = new();
+            phoneGyroFeatures = CartesianStatisticalFeatures.CreateEmptyFeatures();
+            phoneAccFeatures = CartesianStatisticalFeatures.CreateEmptyFeatures();
+            sensorGyroFeature = CartesianStatisticalFeatures.CreateEmptyFeatures();
+            sensorAccFeatures = CartesianStatisticalFeatures.CreateEmptyFeatures();
             totalSteps = 0;
         }
     }

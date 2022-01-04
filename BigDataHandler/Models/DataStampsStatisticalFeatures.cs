@@ -26,12 +26,18 @@ namespace BigDataHandler.Models
 
     public class CartesianStatisticalFeatures
     {
+        static public CartesianStatisticalFeatures CreateEmptyFeatures()
+        {
+            var features = new CartesianStatisticalFeatures();
+            features.xAxisFeatures = new();
+            features.yAxisFeatures = new();
+            features.zAxisFeatures = new();
+            return features;
+        }
         public CartesianStatisticalFeatures()
         {
-            xAxisFeatures = new();
-            yAxisFeatures = new();
-            zAxisFeatures = new();
         }
+
         public int Id { get; set; }
         public StatisticalFeatures xAxisFeatures { get; set; }
         public StatisticalFeatures yAxisFeatures { get; set; }
