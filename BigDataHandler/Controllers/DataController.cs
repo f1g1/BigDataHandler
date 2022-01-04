@@ -2,6 +2,7 @@
 using System;
 using BigDataHandler.Models;
 using BigDataHandler.EFConfigs;
+using BigDataHandler.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Diagnostics;
@@ -19,6 +20,30 @@ namespace BigDataHandler.Controllers
         public DataController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+        }
+
+        [HttpPost]
+        [Route("/api/data/labelData")]
+        public string LabelData(DataLabelingInformation labelingInformation)
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var dataToLabel = _bigDataContext.DataStampsStatisticalFeaturesPredicted.Where(d => d.Id == labelingInformation.Id).First();
+                    if(dataToLabel == null) return "Failed to update the label, data with id:" + labelingInformation.Id + "does not exist!";
+                    dataToLabel.Label = labelingInformation.Label;
+                    dataToLabel.IsProcessed = true;
+                    _bigDataContext.Update(dataToLabel);
+                    return "Sucessfully labele data!";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return "Failed to update label due to an exception!";
         }
 
         [HttpGet]
