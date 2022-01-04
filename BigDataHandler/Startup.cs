@@ -34,8 +34,8 @@ namespace BigDataHandler
             });
 
             services.AddHostedService<FromPhoneReader>();
-            services.AddHostedService<WorkerFeatureExtractor>();
-            
+            //services.AddHostedService<WorkerFeatureExtractor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
