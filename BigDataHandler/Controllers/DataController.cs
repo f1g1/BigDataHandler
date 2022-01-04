@@ -36,6 +36,7 @@ namespace BigDataHandler.Controllers
                     dataToLabel.Label = labelingInformation.Label;
                     dataToLabel.IsProcessed = true;
                     _bigDataContext.Update(dataToLabel);
+                    _bigDataContext.SaveChanges();
                     return "Sucessfully labele data!";
                 }
             }
