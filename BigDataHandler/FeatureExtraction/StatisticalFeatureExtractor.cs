@@ -16,21 +16,28 @@ namespace BigDataHandler.FeatureExtraction
         public DataStampsFeatures ExtractStatisticalFeatures(List<DataStamp> dataStamps)
         {
             DataStampsFeatures features = new();
-            
+
             RawValues phoneGyroRawValues = new(new List<double>(), new List<double>(), new List<double>());
             RawValues phoneAccRawValues = new(new List<double>(), new List<double>(), new List<double>());
             RawValues sensorGyroRawValues = new(new List<double>(), new List<double>(), new List<double>());
             RawValues sensorAccRawValues = new(new List<double>(), new List<double>(), new List<double>());
+            int firstSteps = 0;
+            int lastSteps = 0;
+
 
             foreach (DataStamp data in dataStamps)
             {
-                if(data.Source == "Phone")
+                if (data.Source == "Phone")
                 {
                     switch (data.Type)
                     {
                         case "Accelometer": ExtractRawValues(data, phoneAccRawValues); break;
                         case "Gyroscope": ExtractRawValues(data, phoneGyroRawValues); break;
-                        case "Steps": features.totalSteps = ExtractStepsCounter(data); break;
+                        case "Steps":
+                            int steps = ExtractStepsCounter(data);
+                            if (firstSteps == 0) firstSteps = steps;
+                            lastSteps = steps;
+                            break;
                     }
                 }
                 else
@@ -56,6 +63,7 @@ namespace BigDataHandler.FeatureExtraction
             ExtractFeatures(sensorGyroRawValues.Item1, features.sensorGyroFeature.xAxisFeatures);
             ExtractFeatures(sensorGyroRawValues.Item2, features.sensorGyroFeature.yAxisFeatures);
             ExtractFeatures(sensorGyroRawValues.Item3, features.sensorGyroFeature.zAxisFeatures);
+            features.totalSteps = lastSteps - firstSteps;
             return features;
         }
 
@@ -81,7 +89,7 @@ namespace BigDataHandler.FeatureExtraction
             var values = dataStamp.Values;
             values = values.Substring(1, values.Length - 2);
             var stringValues = values.Split(',');
-            foreach(string value in stringValues)
+            foreach (string value in stringValues)
             {
                 parsedValues.Add(Double.Parse(value));
             }
