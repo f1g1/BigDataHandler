@@ -92,7 +92,8 @@ namespace BigDataHandler.FeatureExtraction
                     else
                     {
                         // This is labeled data, used for training the model
-                        _bigDataContext.DataStampsStatisticalFeatures.Add(dataStampsProcessed);
+                        DataStampsStatisticalFeaturesPredicted baseClass = (DataStampsStatisticalFeaturesPredicted)dataStampsProcessed;
+                        _bigDataContext.DataStampsStatisticalFeatures.Add(baseClass);
                     }
 
                     // Mark the data as processed

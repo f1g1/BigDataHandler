@@ -94,6 +94,49 @@ namespace BigDataHandler.Controllers
             }
             return new List<DataStampsStatisticalFeatures>();
         }
+        [HttpGet]
+        [Route("/api/data/activityStartTraining")]
+        public IEnumerable<long> GetActivityStartsTraining()
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var query = _bigDataContext.DataStampsStatisticalFeatures
+                            .Select(x => x.ActivityStartTimestamp).Distinct();
+
+                    return query.ToArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<long>();
+        }
+        [HttpGet]
+        [Route("/api/data/activityStartLabeling")]
+        public IEnumerable<long> GetActivityStartsLabeling()
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var query = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                            .Select(x => x.ActivityStartTimestamp).Distinct();
+
+                    return query.ToArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<long>();
+        }
+
 
         [HttpGet]
         [Route("/api/data/labeledData")]
