@@ -107,8 +107,9 @@ namespace BigDataHandler.Controllers
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeatures
                             .Select(x => x.ActivityStartTimestamp).Distinct();
-
-                    return query.ToArray();
+                    var query2 = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                           .Select(x => x.ActivityStartTimestamp).Distinct();
+                    return query.Except(query2).ToArray();
                 }
             }
             catch (Exception ex)
