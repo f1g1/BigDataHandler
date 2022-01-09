@@ -164,6 +164,29 @@ namespace BigDataHandler.Controllers
             return new List<DataStampsStatisticalFeatures>();
         }
 
+
+        [HttpGet]
+        [Route("/api/data/labeledDataByActivity")]
+        public IEnumerable<DataStampsStatisticalFeatures> GetLabeledDataByActivity(long activityTimeStamp)
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var query = _bigDataContext.DataStampsStatisticalFeatures
+                        .Where(d => d.IsProcessed == true && d.ActivityStartTimestamp == activityTimeStamp);
+                    var data = IncludeAllEntities(query).ToList();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<DataStampsStatisticalFeatures>();
+        }
+
         [HttpGet]
         [Route("/api/data/classifiedData")]
         public IEnumerable<DataStampsStatisticalFeaturesPredicted> GetClassifiedData(long startTimeStamp, long stopTimeStamp, string label)
@@ -179,6 +202,28 @@ namespace BigDataHandler.Controllers
                     {
                         query = query.Where(d => d.Label == label);
                     }
+                    var data = IncludeAllEntities(query).ToList();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            return new List<DataStampsStatisticalFeaturesPredicted>();
+        }
+
+        [HttpGet]
+        [Route("/api/data/classifiedDataByActivity")]
+        public IEnumerable<DataStampsStatisticalFeaturesPredicted> GetClassifiedDataByActivity(long activityTimeStamp)
+        {
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
+                    var query = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                        .Where(d => d.IsProcessed == true && d.ActivityStartTimestamp == activityTimeStamp);
                     var data = IncludeAllEntities(query).ToList();
                     return data;
                 }
