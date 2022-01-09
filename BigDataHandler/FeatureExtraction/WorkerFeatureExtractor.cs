@@ -30,7 +30,7 @@ namespace BigDataHandler.FeatureExtraction
             {
                 BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                 var dataStampsToBeProcessed = _bigDataContext.DataStamps.Where(x => x.IsProcessed == false).Count();
-                if(dataStampsToBeProcessed == 0)
+                if (dataStampsToBeProcessed == 0)
                 {
                     // No data stamps to be processed present in the database, will begin to query every 10 seconds from the current time
                     startTimestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -92,7 +92,7 @@ namespace BigDataHandler.FeatureExtraction
                     else
                     {
                         // This is labeled data, used for training the model
-                        DataStampsStatisticalFeaturesPredicted baseClass = (DataStampsStatisticalFeaturesPredicted)dataStampsProcessed;
+                        DataStampsStatisticalFeatures baseClass = _mapper.Map<DataStampsStatisticalFeatures>(dataStampsProcessed);
                         _bigDataContext.DataStampsStatisticalFeatures.Add(baseClass);
                     }
 

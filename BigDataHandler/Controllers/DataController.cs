@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using BigDataHandler.FeatureExtraction;
+using AutoMapper;
 
 namespace BigDataHandler.Controllers
 {
@@ -18,12 +19,13 @@ namespace BigDataHandler.Controllers
     {
         private readonly IServiceProvider _serviceProvider;
         private StatisticalFeatureExtractor featureExtractor;
+        private IMapper _mapper;
 
-        public DataController(IServiceProvider serviceProvider)
+        public DataController(IServiceProvider serviceProvider, IMapper mapper)
         {
             _serviceProvider = serviceProvider;
             featureExtractor = new StatisticalFeatureExtractor();
-
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -284,7 +286,8 @@ namespace BigDataHandler.Controllers
                         else
                         {
                             // This is labeled data, used for training the model
-                            _bigDataContext.DataStampsStatisticalFeatures.Add(dataStampsProcessed);
+                            DataStampsStatisticalFeatures baseClass = _mapper.Map<DataStampsStatisticalFeatures>(dataStampsProcessed);
+                            _bigDataContext.DataStampsStatisticalFeatures.Add(baseClass);
                         }
 
                         // Mark the data as processed
