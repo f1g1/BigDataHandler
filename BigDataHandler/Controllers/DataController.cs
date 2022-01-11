@@ -63,8 +63,9 @@ namespace BigDataHandler.Controllers
                 {
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeatures
-                            .Where(d => d.IsProcessed == false && d.Label != null);
-                    var data = IncludeAllEntities(query).ToList();
+                            .Where(d => d.Label != null);
+                    var query2 = _bigDataContext.DataStampsStatisticalFeaturesPredicted.Where(d => true);
+                    var data = IncludeAllEntities(query).Except(query2).ToList();
                     return data;
                 }
             }
@@ -84,8 +85,8 @@ namespace BigDataHandler.Controllers
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
-                    var query = _bigDataContext.DataStampsStatisticalFeatures
-                            .Where(d => d.IsProcessed == false && d.Label == null);
+                    var query = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                            .Where(d => d.Label == null);
                     var data = IncludeAllEntities(query).ToList();
                     return data;
                 }
@@ -152,11 +153,13 @@ namespace BigDataHandler.Controllers
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeatures
                             .Where(d => d.IsProcessed == false && d.StartTimestamp >= startTimeStamp && d.StopTimestamp <= stopTimeStamp);
+                    var query2 = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                        .Where(d => true);
                     if (label != null)
                     {
                         query = query.Where(d => d.Label == label);
                     }
-                    var data = IncludeAllEntities(query).ToList();
+                    var data = IncludeAllEntities(query).Except(query2).ToList();
                     return data;
                 }
             }
@@ -178,8 +181,10 @@ namespace BigDataHandler.Controllers
                 {
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeatures
-                        .Where(d => d.IsProcessed == true && d.ActivityStartTimestamp == activityTimeStamp);
-                    var data = IncludeAllEntities(query).ToList();
+                        .Where(d => d.ActivityStartTimestamp == activityTimeStamp);
+                    var query2 = _bigDataContext.DataStampsStatisticalFeaturesPredicted
+                        .Where(d => d.ActivityStartTimestamp == activityTimeStamp);
+                    var data = IncludeAllEntities(query).Except(query2).ToList();
                     return data;
                 }
             }
@@ -226,7 +231,7 @@ namespace BigDataHandler.Controllers
                 {
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeaturesPredicted
-                        .Where(d => d.IsProcessed == true && d.ActivityStartTimestamp == activityTimeStamp);
+                        .Where(d => d.ActivityStartTimestamp == activityTimeStamp);
                     var data = IncludeAllEntities(query).ToList();
                     return data;
                 }
