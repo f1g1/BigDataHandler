@@ -63,9 +63,9 @@ namespace BigDataHandler.Controllers
                 {
                     BigDataContext _bigDataContext = scope.ServiceProvider.GetRequiredService<BigDataContext>();
                     var query = _bigDataContext.DataStampsStatisticalFeatures
-                            .Where(d => d.Label != null && d.IsProcessed==false);
-                   
-                    return query.ToList();
+                            .Where(d => d.Label != null && d.IsProcessed == false);
+                    var data = IncludeAllEntities(query).ToList();
+                    return data;
                 }
             }
             catch (Exception ex)
